@@ -1,0 +1,41 @@
+body{
+    margin: 0;
+    background-image: url('./pic.jpg');
+    background-size: cover;
+    height: 100vh;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
+
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+}
+
+div.text-container{
+    /* position: absolute;
+    top: 30%; */
+    padding: 20px;
+    background-color: rgb(255, 251, 251, 0.6);
+    width: 70%;
+    /* height: 300px; */
+    border-radius: 20px;
+}
+h1{
+    font-size: 3.5em;
+}
+.date-container .row{
+    margin-top: 130px;
+}
+
+.countdown{
+    display: inline-block;
+    font-size: 1.7rem;
+    padding: 1em;
+}
+
+.countdown span{
+    display: block;
+    font-size: 5rem;
+}
