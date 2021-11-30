@@ -57,12 +57,30 @@
         duckElem.style.backgroundImage = getDuckBackgroundImage(duck, duckElem);
     }
 
+    function shootDuck(event){
+        console.log(event);
+        const duckElem = event.target;
+        duckElem.style.transition = 'top 2s';
+        duckElem.style.top = `${window.innerHeight}px`;
+
+        clearInterval(duckElem.interval);
+        setTimeout(() => {
+           document.body.removeChild(duckElem);
+           const duck = document.querySelector('.duck'); 
+           if(!duck){
+               const winningElem = document.querySelector('.winning');
+               winningElem.style.opacity = 1;
+           }
+        }, 2000);
+    }
+
     function run(){ 
         const ducks = createDucks();
         const duckElems = ducks.map(setupDuckElement);
 
         duckElems.forEach(({ duck, duckElem })=>{
-            setInterval(()=>moveDuck(duckElem, duck), 100);
+            duckElem.interval = setInterval(()=>moveDuck(duckElem, duck), 100);
+            duckElem.addEventListener('click',shootDuck);
 
         });
         //console.log(ducks);
