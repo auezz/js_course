@@ -1,0 +1,39 @@
+.card-post{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-post-bg{
+    background-color: rgba(0, 0, 0, 0.438);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.card-post-content{
+    position: relative;
+    max-width: 1200px;
+    background-color: black;
+}
+
+.card-post-content img{
+    display: block;
+    max-width: 100%;
+    max-height: calc(100vh - 120px);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.card-post-content h4{
+    text-align: center;
+    color: white;
+}
