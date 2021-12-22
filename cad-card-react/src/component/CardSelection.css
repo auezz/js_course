@@ -1,0 +1,12 @@
+.card-header{
+    text-align: center;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.img-card{
+    height: auto;
+    width: 10vw;
+    border: 1px solid darkgray;
+    border-radius: 5px;
+}

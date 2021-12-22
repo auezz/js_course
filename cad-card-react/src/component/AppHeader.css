@@ -1,0 +1,10 @@
+.header-section{
+    padding: 10px 20px;
+    border-bottom: 1px solid lightgrey;
+}
+
+.header-text{
+    text-transform: uppercase;
+    text-align: start;
+    font-weight: bold;
+}
