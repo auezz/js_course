@@ -6,7 +6,12 @@
 
 .img-card{
     height: auto;
-    width: 10vw;
+    width: 7vw;
     border: 1px solid darkgray;
     border-radius: 5px;
+}
+
+.card-selected{
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
+    outline: 3px solid #78DEC7;
 }

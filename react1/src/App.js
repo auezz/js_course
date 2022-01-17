@@ -12,6 +12,7 @@ function App() {
     const [searchText, setSearchText] = useState('');
 
     function onCardOpenClick(getCard){
+        console.log('cardClick',getCard);
         setSelectedCard(getCard);
     }
 
