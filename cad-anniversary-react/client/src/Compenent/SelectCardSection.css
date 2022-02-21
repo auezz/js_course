@@ -1,0 +1,28 @@
+.card-select-section .card-header {
+    color: white;
+    background-color: #008E89;
+}
+
+.card-select-section .card-body{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    max-height: 500px;
+    overflow: auto;
+}
+
+.card-select-section .card-body .card-container{
+    width: 25vh;
+    height: auto;
+    margin: 10px;
+    border: 1px solid lightgray;
+    padding: 10px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+.card-select-section .card-body img{
+    width: 100%;
+    height: auto;
+    border-radius: 15px;
+}
