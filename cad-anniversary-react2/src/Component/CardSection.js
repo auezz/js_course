@@ -23,7 +23,7 @@ export default function CardSection(props) {
 
     
     return (
-        <div className='w-75 card-select-section card'>
+        <div className='w-75 card-select-section card mb-3'>
             <div className="card-header">
                 card selection
             </div>

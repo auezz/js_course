@@ -1,3 +1,7 @@
+:root{
+    --title-color: #393E46;
+}
+
 .input-section .card-header{
     color: white;
     background-color: #215586;
@@ -7,4 +11,29 @@
 
 .input-section .card-body{
     padding: 30px 20px;
+}
+.form-label{
+    color: var(--title-color);
+    font-weight: bold;
+}
+div.user-info-input .prefix{
+    width: 15%;
+}
+div.user-info-input .fname,
+div.user-info-input .lname{
+    width: calc((100%-15%)/2);
+}
+
+.select-anniv-title{
+    align-self: center;
+    font-weight: bold;
+    color: var(--title-color);
+    width: 20%;
+}
+.select-anniv{
+    width: 100%;
+}
+
+#textareaAnniv{
+    min-height: 150px;
 }

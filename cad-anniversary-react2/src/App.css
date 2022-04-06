@@ -1,18 +1,60 @@
 @import url('https://fonts.googleapis.com/css2?family=Sarabun&display=swap');
 
-body{
-  margin: 0;
-  font-family: 'Sarabun', sans-serif;
+body {
+    margin: 0;
+    font-family: 'Sarabun', sans-serif;
 }
-.App{
-  height: 100vh;
+
+.App {
+    height: 100vh;
 }
-.main-container{
-  width: 90%;
-  margin: auto;
-  padding-top: 100px;
-  padding-bottom: 100px;
+
+.main-container {
+    width: 90%;
+    margin: auto;
+    padding-top: 100px;
+    padding-bottom: 100px;
 }
-img.modal-pic{
-  border-radius: 15px;
+
+img.modal-pic {
+    border-radius: 15px;
+}
+
+@media only screen and (max-width: 900px) {
+    .main-form {
+        display: block !important;
+    }
+
+    .card-select-section {
+        width: 100% !important;
+    }
+}
+
+@media only screen and (max-width: 500px) {
+    .card-select-section .card-body .card-container {
+        width: 22vh !important;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+    .card-select-section .card-body .card-container {
+        width: 20vh !important;
+        padding: 10px !important;
+        border-radius: 10px !important;
+    }
+
+    .card-select-section .card-body img {
+        border-radius: 10px !important;
+    }
+}
+@media only screen and (max-width: 400px) {
+    .card-select-section .card-body .card-container {
+        width: 30vh !important;
+        padding: 15px !important;
+        border-radius: 15px !important;
+    }
+
+    .card-select-section .card-body img {
+        border-radius: 15px !important;
+    }
 }

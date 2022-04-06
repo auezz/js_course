@@ -16,6 +16,8 @@ function App() {
     const [ministryList, setMinistryList] = useState([]);
     const [departmentList, setDepartmentList] = useState([]);
     const [ministryId, setMinistryId] = useState(null);
+    const [prefixList, setPrefixList] = useState([]);
+    const [annivList, setAnnivList] = useState([]);
 
 
 
@@ -35,8 +37,20 @@ function App() {
             setMinistryList(ministryData);
             //console.log('ministryData: ', ministryData);
         }
+        const getPrefix = async ()=>{
+            const prefix = await fetchPrefix();
+            //console.log('prefix: ', prefix);
+            setPrefixList(prefix);
+        }
+        const getAnnivWord = async ()=>{
+            const anniv = await fetchAnniv();
+            setAnnivList(anniv);
+
+        }
         getCardList();
         getMinistryList();
+        getPrefix();
+        getAnnivWord();
     },[]);
 
     useEffect(()=>{
@@ -64,6 +78,18 @@ function App() {
 
     const fetchDepartment = async()=>{
         const res = await Axios.get(`http://localhost:5000/department?gov_main_id=${ministryId}`);
+        const data = await res.data;
+        return data;
+    }
+
+    const fetchPrefix = async()=>{
+        const res = await Axios.get('http://localhost:5000/prefix_name');
+        const data = await res.data;
+        return data;
+    }
+
+    const fetchAnniv = async()=>{
+        const res = await Axios.get('http://localhost:5000/anniversary_word');
         const data = await res.data;
         return data;
     }
@@ -135,6 +161,10 @@ function App() {
                 <CardSection cardList={cardList} onCardClick={onCardClick} />
                 <InputSection   ministryList={ministryList} 
                                 onMinistryChange={onMinistryChange}
+                                ministryId={ministryId}
+                                departmentList={departmentList}
+                                prefixList={prefixList}
+                                annivList={annivList}
                 />
             </div>
 
