@@ -1,0 +1,10 @@
+.input-section .card-header{
+    color: white;
+    background-color: #215586;
+    font-weight: bold;
+    text-align: center;
+}
+
+.input-section .card-body{
+    padding: 30px 20px;
+}

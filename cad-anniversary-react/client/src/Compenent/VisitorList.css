@@ -1,0 +1,17 @@
+.text-title{
+    text-align: center;
+    font-weight: bold;
+    font-size: 2vw;
+}
+.visitor-list{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+}
+@media only screen and (max-width: 1300px){
+    div.card_layout div.card-box {
+        width: 15vw;
+        margin: 15px;
+    }
+}

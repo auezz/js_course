@@ -1,0 +1,15 @@
+.header-main{
+    width: 100vw;
+    height: 200px;
+    background-color: lightgray;
+}
+
+.header-main h1{
+    position: relative;
+    top: 50%;
+    left: 50%;
+    padding: 0;
+    margin: 0;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}

@@ -1,0 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Sarabun&display=swap');
+
+body{
+  margin: 0;
+  font-family: 'Sarabun', sans-serif;
+}
+.main-container{
+  width: 80%;
+  margin: auto;
+}
+
+img.modal-pic{
+  border-radius: 15px;
+}
