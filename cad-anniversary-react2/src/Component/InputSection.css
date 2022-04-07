@@ -17,11 +17,11 @@
     font-weight: bold;
 }
 div.user-info-input .prefix{
-    width: 15%;
+    width: 20%;
 }
 div.user-info-input .fname,
 div.user-info-input .lname{
-    width: calc((100%-15%)/2);
+    width: calc((100%-20%)/2);
 }
 
 .select-anniv-title{
