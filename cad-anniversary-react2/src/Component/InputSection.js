@@ -1,4 +1,5 @@
 import React from 'react'
+import { useEffect, useState } from 'react';
 import './InputSection.css';
 import Cleave from 'cleave.js/react';
 import CleavePhone from 'cleave.js/dist/addons/cleave-phone.th';
@@ -6,6 +7,21 @@ import CleavePhone from 'cleave.js/dist/addons/cleave-phone.th';
 export default function InputSection(props) {
     const {ministryList, onMinistryChange, ministryId, departmentList, prefixList, annivList} = props;
     const wishTextRegEx = /&#[0-9]+;/g;
+    const wishTextRegEx2 = / &#13;&#10; /g;
+    const emailValidRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const [formData, setFormData] = useState({
+        ministry: 0,
+        department: 0,
+        prefix: 0,
+        firstName: '',
+        lastName: '',
+        position: '',
+        phone: '',
+        email: '',
+        annivId: 0,
+        annivText: ''
+    });
+
     const elemList = Array.from(document.querySelectorAll('.add-form input, .add-form select, .add-form textarea'));
     console.log('A elemList: ', elemList);
     console.log('annivList: ', annivList);
@@ -13,8 +29,8 @@ export default function InputSection(props) {
 
     const onSelectchange = (e)=>{
         console.log('onSelectChange: ', e);
-        if(e.target.id==="selectMinistryList"){
-            const departmentElem = document.getElementById('selectDepartmentList');
+        if(e.target.id==="ministry"){
+            const departmentElem = document.getElementById('department');
             departmentElem.value = 0;
         }
     }
@@ -22,44 +38,106 @@ export default function InputSection(props) {
     const onSubmitForm = (e)=>{
         e.preventDefault();
         console.log('submit');
+        console.log('formData: ', formData);
+        let check = true;
         elemList.forEach((elem)=>{
             let elemClassList = Array.from(elem.classList);
             console.log(elemClassList);
             if(elemClassList.includes('is-required')===true){
                 if(elem.type==="select-one" && elem.value==="0"){
                     elem.classList.add('is-invalid');
-                    if(elem.id==="selectAnniv"){
-                        const textareaAnnivElem = document.getElementById('textareaAnniv');
-                        textareaAnnivElem.classList.add('is-invalid');
+                    check = false;
+                    if(elem.id==="annivId"){
+                        const annivTextElem = document.getElementById('annivText');
+                        annivTextElem.classList.add('is-invalid');
                     }
                 }else if((elem.type==="text" || elem.type==="textarea") && elem.value===""){
                     elem.classList.add('is-invalid');
+                    check = false;
+                }
+            }else{
+                if(elem.id==="phone" && elem.value!==""){
+                    let getVal = elem.value.split(" ").join('');
+                    console.log('getValPhone: ', getVal, getVal.length);
+                    if(getVal.length!==10){
+                        elem.classList.add('is-invalid');
+                        check = false;
+                    }else{
+                        setFormData((prevFromData)=>{
+                            return {
+                                ...prevFromData,
+                                phone: getVal
+                            }
+                        });
+                    }
+                }else if(elem.id==="email" && elem.value!==""){
+                    if(elem.value.match(emailValidRegex)){
+                        console.log('email: ',true);
+                    }else{
+                        elem.classList.add('is-invalid');
+                        check = false;
+                    }
                 }
             }
-
-
         });
+        console.log('checkState: ', check);
     }
 
     const onInputChange = (e)=>{
-        console.log('onInputChangeL ', e);
-        if(e.target.type==="select-one" && e.target.value!=="0"){
-            e.target.classList.remove('is-invalid');
-            if(e.target.id==="selectAnniv"){
-                const textareaAnnivElem = document.getElementById('textareaAnniv');
-                textareaAnnivElem.disabled = false;
-            }
-        }else if((e.target.type==="text" || e.target.type==="textarea") && e.target.value!==""){
-            e.target.classList.remove('is-invalid');
+        console.log('onInputChangeL ', e.target.id);
+        const { name, value } = e.target;
+        const annivTextElem = document.getElementById('annivText');
+        
+        if(e.target.id==="ministry"){
+            const departmentElem = document.getElementById('department');
+            departmentElem.value = 0;
         }
+
+        if(e.target.value!=="" || e.target.value!=="0"){
+            e.target.classList.remove('is-invalid');
+            if(e.target.id==="annivId"){
+                let textAnniv = "";
+                annivTextElem.disabled = false;
+                annivTextElem.classList.remove('is-invalid');
+                if(e.target.value!=="99"){
+                    let textAnnivObj = annivList.find(item=> item.id_word === e.target.value);
+                    console.log('textAnniv: ', textAnnivObj.word);
+                    textAnniv = textAnnivObj.word.replace(wishTextRegEx2,'\n');
+                }
+                setFormData((prevFromData)=>{
+                    return {
+                        ...prevFromData,
+                        annivText: textAnniv
+                    }
+                });
+            }
+        }else if(e.target.value==="0" && e.target.id==="annivId"){
+            annivTextElem.value = null;
+            annivTextElem.disabled = false;
+            setFormData((prevFromData)=>{
+                return {
+                    ...prevFromData,
+                    annivText: null
+                }
+            });
+        } 
+        setFormData((prevFromData)=>{
+            return {
+                ...prevFromData,
+                [name]: value
+            }
+        });
+        console.log(e.target.value);
+        
     }
 
+    
     const setOnChange = ()=>{
         elemList.forEach((elem)=>{
             elem.addEventListener('change', onInputChange);
         });
     }
-    setOnChange();
+    //setOnChange();
 
 
 
@@ -72,13 +150,14 @@ export default function InputSection(props) {
                 <form className='add-form' onSubmit={onSubmitForm} action="">
                     <div className="d-flex gap-3 mb-3">
                         <div className="w-50">
-                            <label htmlFor="selectMinistryList" className="form-label mb-1">ประเภท/สังกัด</label>
-                            <select name="selectMinistryList" 
-                                    id="selectMinistryList"
+                            <label htmlFor="ministry" className="form-label mb-1">ประเภท/สังกัด</label>
+                            <select name="ministry" 
+                                    id="ministry"
                                     className='form-select is-required'
+                                    value={formData.ministry}
                                     onChange={(e)=>{
                                         onMinistryChange(e);
-                                        onSelectchange(e);
+                                        onInputChange(e);
 
                                     }}
                                     
@@ -96,10 +175,14 @@ export default function InputSection(props) {
                             </div>
                         </div>
                         <div className="w-50">
-                            <label htmlFor="selectDepartmentList" className='form-label mb-1'>ชื่อหน่วยงาน</label>        
-                            <select name="selectDepartmentList" 
-                                    id="selectDepartmentList"
-                                    className='form-select is-required'>
+                            <label htmlFor="department" className='form-label mb-1'>ชื่อหน่วยงาน</label>        
+                            <select name="department" 
+                                    id="department"
+                                    className='form-select is-required'
+                                    onChange={(e)=>{
+                                        onInputChange(e);    
+                                    }}
+                                    value={formData.department} >
                                 <option value={0} defaultValue>-- กรุณาเลือก --</option>
                                 {
                                     departmentList.map((data, index)=>(
@@ -116,10 +199,12 @@ export default function InputSection(props) {
                     </div>
                     <div className="d-flex gap-3 mb-3 user-info-input">
                         <div className="prefix">
-                            <label htmlFor="selectPrefixName" className='form-label text-nowrap mb-1'>คำนำหน้า</label>
-                            <select name="selectPrefixName" 
-                                    id="selectPrefixName"
-                                    className='form-select is-required'>
+                            <label htmlFor="prefix" className='form-label text-nowrap mb-1'>คำนำหน้า</label>
+                            <select name="prefix" 
+                                    id="prefix"
+                                    className='form-select is-required'
+                                    value={formData.prefix}
+                                    onChange={onInputChange}>
                                 <option value={0} defaultValue>-- กรุณาเลือก --</option>
                                 {
                                     prefixList.map((data, index)=>(
@@ -132,18 +217,21 @@ export default function InputSection(props) {
                             </div>        
                         </div>
                         <div className="fname">
-                            <label htmlFor="inputFirstName" className='form-label mb-1'>ชื่อ</label>
+                            <label htmlFor="firstName" className='form-label mb-1'>ชื่อ</label>
                             <input type="text" className='form-control is-required' 
-                                id="inputFirstName" name='inputFirstName'
+                                id="firstName" name='firstName'
+                                onChange={onInputChange}
                             />
                             <div className="invalid-feedback">
                                 กรุณากรอกชื่อ
                             </div>            
                         </div>            
                         <div className="lname">
-                            <label htmlFor="inputLastName" className='form-label mb-1'>นามสกุล</label>
+                            <label htmlFor="lastName" className='form-label mb-1'>นามสกุล</label>
                             <input type="text" className='form-control is-required' 
-                                id="inputLastName" name='inputLastName'
+                                id="lastName" name='lastName'
+                                value={formData.lastName}
+                                onChange={onInputChange}
                             />
                             <div className="invalid-feedback">
                                 กรุณากรอกนามสกุล
@@ -151,9 +239,11 @@ export default function InputSection(props) {
                         </div>
                     </div>
                     <div className="mb-3">
-                        <label htmlFor="inputPosition" className='form-label mb-1'>ตำแหน่ง</label>
+                        <label htmlFor="position" className='form-label mb-1'>ตำแหน่ง</label>
                         <input type="text" className='form-control is-required'
-                            id="inputPosition" name='inputPosition' 
+                            id="position" name='position' 
+                            value={formData.position}
+                            onChange={onInputChange}
                         />
                         <div className="invalid-feedback">
                             กรุณาระบุตำแหน่ง
@@ -161,22 +251,26 @@ export default function InputSection(props) {
                     </div>
                     <div className="d-flex gap-3 mb-3">
                         <div className="phone w-50">
-                            <label htmlFor="inputPhone" className='form-label mb-1'>เบอร์โทรศัพท์</label>
+                            <label htmlFor="phone" className='form-label mb-1'>เบอร์โทรศัพท์</label>
                             <Cleave className='form-control'
-                                id='inputPhone'
-                                name='inputPhone'
+                                id='phone'
+                                name='phone'
+                                value={formData.phone}
                                 options={{  phone: true,
                                             phoneRegionCode: 'TH'    
-                                        }}                  
+                                        }} 
+                                onChange={onInputChange}                         
                             />
                             <div className="invalid-feedback">
                                 กรุณากรอกเบอร์โทรศัพท์ให้ถูกต้อง
                             </div>
                         </div>
                         <div className="email w-50">
-                            <label htmlFor="inputEmail" className='form-label mb-1'>อีเมล</label>
+                            <label htmlFor="email" className='form-label mb-1'>อีเมล</label>
                             <input type="text" className='form-control'
-                                    id="inputEmail" name='inputEmail'
+                                    id="email" name='email'
+                                    value={formData.email}
+                                    onChange={onInputChange}
                             />
                             <div className="invalid-feedback">
                                 รูปแบบอีเมลไม่ถูกต้อง
@@ -186,21 +280,29 @@ export default function InputSection(props) {
                     <div className="d-flex gap-3 mb-3">
                         <div className="select-anniv-title">คำอวยพร</div>
                         <div className='select-anniv'>
-                            <select name="selectAnniv" id="selectAnniv" className='form-select is-required'>
+                            <select name="annivId" 
+                                    id="annivId" 
+                                    className='form-select is-required'
+                                    onChange={onInputChange}
+                                    value={formData.annivId}
+                            >
                                 <option value={0} defaultValue>-- เลือกคำอวยพร --</option>
                                 {
                                     annivList.map((data, index)=>(
                                         <option key={index} value={data.id_word}>{(data.word).replace(wishTextRegEx,'')}</option>
                                     ))
-                                }        
+                                }
+                                <option value={99}>กรอกข้อความด้วยตนเอง</option>        
                             </select>
                         </div>
                     </div>
                     <div className="anniv-text mb-3">
                         <textarea   className="form-control is-required" 
                                     placeholder="กรอกข้อความอวยพร" 
-                                    id="textareaAnniv"
-                                    name='textareaAnniv'
+                                    id="annivText"
+                                    name='annivText'
+                                    value={formData.annivText}
+                                    onChange={onInputChange}
                                     disabled>
                         </textarea>
                         <div className="invalid-feedback">
