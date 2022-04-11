@@ -5,14 +5,16 @@ import { Header } from './Component/Header';
 import CardSection from './Component/CardSection';
 import InputSection from './Component/InputSection';
 import Modal from 'react-modal';
-
+const fnc = require('./ClassFunction');
 
 function App() {
 
     const [cardList, setCardList] = useState([]);
-    const [cardSelected, setCardSelected] = useState(null);
+    const [cardSelected, setCardSelected] = useState({
+        card_id: null,
+        card_pic: null
+    });
     const [modalIsOpen, setIsOpen] = useState(false);
-    const [modalPic, setModalPic] = useState(null);
     const [ministryList, setMinistryList] = useState([]);
     const [departmentList, setDepartmentList] = useState([]);
     const [ministryId, setMinistryId] = useState(null);
@@ -95,8 +97,20 @@ function App() {
     }
 
 
-    const onCardClick = (cardId) => {
+    const onCardClick = async(cardId) => {
         //console.log('cardId:', cardId);
+        await updateCardList(cardId);
+        const cardPath = cardList.find((card) => card.card_id === cardId);
+        console.log("cardPath: ",cardPath);
+        setCardSelected({
+            card_id: cardPath.card_id,
+            card_pic: cardPath.card_pic
+        });
+        console.log('cardSelected: ', cardSelected);
+        openModal();
+    }
+
+    const updateCardList = async(cardId=null)=>{
         const updateCard = cardList.map(card => {
             if (card.card_id === cardId) {
               return {...card, selected: true};
@@ -104,14 +118,9 @@ function App() {
                 return {...card, selected: false};
             }
         });
-        console.log('update-card: ', updateCard);  
-        
         setCardList(updateCard);
-        const cardPath = cardList.find((card) => card.card_id === cardId);
-        console.log("cardPath: ",cardPath);
-        setModalPic(cardPath.card_pic);
-        openModal();
-        
+        //return updateCard;
+
     }
 
     const onMinistryChange = (e) => {
@@ -142,7 +151,10 @@ function App() {
         // references are now sync'd and can be accessed.
         //subtitle.style.color = '#f00';
         console.log('hello after open');
-        setTimeout(closeModal, 5000);
+        if(modalIsOpen===true){
+            setTimeout(closeModal, 5000);
+        }
+        
 
 
 
@@ -150,6 +162,21 @@ function App() {
     
     function closeModal() {
         setIsOpen(false);
+    }
+
+    const onAddData = async (formData) =>{
+        console.log("onAddData1: ",formData);
+        await updateCardList();
+        formData.createTimestamp = fnc.getTimeStamp();
+        formData.card_id = cardSelected.card_id;
+        //console.log('onAddData2: ', formData);
+        const res = await Axios.post('http://localhost:5000/anniversary_main',formData);
+        const data = await res.data;
+        console.log('postData: \n', data);
+        setCardSelected({
+            card_id: null,
+            card_pic: null
+        });
     }
 
 
@@ -161,10 +188,11 @@ function App() {
                 <CardSection cardList={cardList} onCardClick={onCardClick} />
                 <InputSection   ministryList={ministryList} 
                                 onMinistryChange={onMinistryChange}
-                                ministryId={ministryId}
                                 departmentList={departmentList}
                                 prefixList={prefixList}
                                 annivList={annivList}
+                                cardSelected={cardSelected}
+                                onAddData={onAddData}
                 />
             </div>
 
@@ -176,7 +204,7 @@ function App() {
                 contentLabel="Example Modal"
                 ariaHideApp={false}
             >
-                <img className='modal-pic' src={`./images/cad-card-pic/${modalPic}`} alt="" />
+                <img className='modal-pic' src={`./images/cad-card-pic/${cardSelected.card_pic}`} alt="" />
             </Modal>
         </div>
     );

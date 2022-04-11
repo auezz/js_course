@@ -5,11 +5,11 @@ import Cleave from 'cleave.js/react';
 import CleavePhone from 'cleave.js/dist/addons/cleave-phone.th';
 
 export default function InputSection(props) {
-    const {ministryList, onMinistryChange, ministryId, departmentList, prefixList, annivList} = props;
+    const {ministryList, onMinistryChange, departmentList, prefixList, annivList, cardSelected, onAddData} = props;
     const wishTextRegEx = /&#[0-9]+;/g;
     const wishTextRegEx2 = / &#13;&#10; /g;
     const emailValidRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-    const [formData, setFormData] = useState({
+    const initialVal = {
         ministry: 0,
         department: 0,
         prefix: 0,
@@ -20,11 +20,14 @@ export default function InputSection(props) {
         email: '',
         annivId: 0,
         annivText: ''
-    });
+    };
+    const [formData, setFormData] = useState(initialVal);
+    
 
     const elemList = Array.from(document.querySelectorAll('.add-form input, .add-form select, .add-form textarea'));
     console.log('A elemList: ', elemList);
     console.log('annivList: ', annivList);
+    console.log('cardSelected: ', cardSelected.card_id, typeof cardSelected.card_id, cardSelected);
 
 
     const onSelectchange = (e)=>{
@@ -80,11 +83,19 @@ export default function InputSection(props) {
                 }
             }
         });
+        
         console.log('checkState: ', check);
+        if(check===true){
+            onAddData(formData);
+            //console.log('initailVal: ', initialVal);
+            console.log('formData: ', formData);
+            setFormData(initialVal);
+            
+        }
     }
 
     const onInputChange = (e)=>{
-        console.log('onInputChangeL ', e.target.id);
+        console.log('onInputChangeL ', e.target.id, e.target.value);
         const { name, value } = e.target;
         const annivTextElem = document.getElementById('annivText');
         
@@ -99,10 +110,12 @@ export default function InputSection(props) {
                 let textAnniv = "";
                 annivTextElem.disabled = false;
                 annivTextElem.classList.remove('is-invalid');
-                if(e.target.value!=="99"){
+                if(e.target.value!=="99" && e.target.value!=="0"){
                     let textAnnivObj = annivList.find(item=> item.id_word === e.target.value);
                     console.log('textAnniv: ', textAnnivObj.word);
                     textAnniv = textAnnivObj.word.replace(wishTextRegEx2,'\n');
+                }else{
+                    annivTextElem.disabled = true;
                 }
                 setFormData((prevFromData)=>{
                     return {
@@ -111,16 +124,7 @@ export default function InputSection(props) {
                     }
                 });
             }
-        }else if(e.target.value==="0" && e.target.id==="annivId"){
-            annivTextElem.value = null;
-            annivTextElem.disabled = false;
-            setFormData((prevFromData)=>{
-                return {
-                    ...prevFromData,
-                    annivText: null
-                }
-            });
-        } 
+        }
         setFormData((prevFromData)=>{
             return {
                 ...prevFromData,
@@ -220,6 +224,7 @@ export default function InputSection(props) {
                             <label htmlFor="firstName" className='form-label mb-1'>ชื่อ</label>
                             <input type="text" className='form-control is-required' 
                                 id="firstName" name='firstName'
+                                value={formData.firstName}
                                 onChange={onInputChange}
                             />
                             <div className="invalid-feedback">
@@ -313,7 +318,7 @@ export default function InputSection(props) {
                         <button className='btn btn-success px-4'
                                 type='submit'    
                         > 
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-send" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
                                 <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
                             </svg>&ensp;บันทึก
                         </button>            
