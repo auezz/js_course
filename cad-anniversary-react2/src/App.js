@@ -5,10 +5,12 @@ import { Header } from './Component/Header';
 import CardSection from './Component/CardSection';
 import InputSection from './Component/InputSection';
 import Modal from 'react-modal';
+import GreetingList from './Component/GreetingList';
+
 const fnc = require('./ClassFunction');
 
 function App() {
-
+    
     const [cardList, setCardList] = useState([]);
     const [cardSelected, setCardSelected] = useState({
         card_id: null,
@@ -179,8 +181,7 @@ function App() {
         });
     }
 
-
-
+    
     return (
         <div className="App">
             <Header/>
@@ -194,7 +195,9 @@ function App() {
                                 cardSelected={cardSelected}
                                 onAddData={onAddData}
                 />
+                
             </div>
+            <GreetingList/>
 
             <Modal
                 isOpen={modalIsOpen}

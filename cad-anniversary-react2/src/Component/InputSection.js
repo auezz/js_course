@@ -3,8 +3,11 @@ import { useEffect, useState } from 'react';
 import './InputSection.css';
 import Cleave from 'cleave.js/react';
 import CleavePhone from 'cleave.js/dist/addons/cleave-phone.th';
+import MicroModal from 'react-micro-modal';
+
 
 export default function InputSection(props) {
+    
     const {ministryList, onMinistryChange, departmentList, prefixList, annivList, cardSelected, onAddData} = props;
     const wishTextRegEx = /&#[0-9]+;/g;
     const wishTextRegEx2 = / &#13;&#10; /g;
@@ -314,6 +317,12 @@ export default function InputSection(props) {
                             กรุณากรอกคำอวยพร
                         </div>
                     </div>
+                    <div className="form-check">
+                        <input className="form-check-input" type="checkbox" value="" id="flexCheckChecked" data-micromodal-trigger="modal-1"/>
+                        <label className="form-check-label" htmlFor='flexCheckChecked'>
+                            Checked checkbox
+                        </label>
+                    </div>
                     <div className='btn-container text-center mt-4'>
                         <button className='btn btn-success px-4'
                                 type='submit'    
@@ -323,6 +332,9 @@ export default function InputSection(props) {
                             </svg>&ensp;บันทึก
                         </button>            
                     </div>
+                    <MicroModal trigger={(open) => <div onClick={open}>Open!</div>}>
+                        {(close) => <button onClick={close}>Close!</button>}
+                    </MicroModal>
                 </form>    
             </div>
         </div>
