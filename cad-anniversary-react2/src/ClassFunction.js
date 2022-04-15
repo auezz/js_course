@@ -7,3 +7,12 @@ module.exports.getTimeStamp = ()=>{
     const dateTime = date+' '+time;
     return dateTime;
 }
+
+/*
+function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+*/
+module.exports.numberWCommas = (number)=>{
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

@@ -1,0 +1,19 @@
+.card-list-container{
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+}
+.card-box{
+    width: 14vw;
+    margin: 15px;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    padding: 15px;
+
+}
+
+.card-thumbnail img{
+    max-width: 100%;
+    height: auto;
+}

@@ -6,11 +6,12 @@ import CardSection from './Component/CardSection';
 import InputSection from './Component/InputSection';
 import Modal from 'react-modal';
 import GreetingList from './Component/GreetingList';
+import { useSpring, animated } from 'react-spring'
 
 const fnc = require('./ClassFunction');
 
 function App() {
-    
+
     const [cardList, setCardList] = useState([]);
     const [cardSelected, setCardSelected] = useState({
         card_id: null,
@@ -22,31 +23,33 @@ function App() {
     const [ministryId, setMinistryId] = useState(null);
     const [prefixList, setPrefixList] = useState([]);
     const [annivList, setAnnivList] = useState([]);
+    const [modalTimer, setModalTimer] = useState();
+    const [getDataStatus, setGetDataStatus] = useState(false);
+    const [greetingList, setGreetingList] = useState([]);
 
 
-
-    useEffect(()=>{
-        const getCardList = async ()=> {
-            const cardData = await fetchCardList();    
+    useEffect(() => {
+        const getCardList = async () => {
+            const cardData = await fetchCardList();
             //console.log('card: ', cardData);
             let getCardData = [];
             cardData.forEach((element, index) => {
-                getCardData[index] = {...element, 'selected': false };
+                getCardData[index] = { ...element, 'selected': false };
             });
-            setCardList(getCardData);       
-            console.log(getCardData); 
+            setCardList(getCardData);
+            //console.log(getCardData);
         }
-        const getMinistryList = async ()=>{
+        const getMinistryList = async () => {
             const ministryData = await fetchMinistry();
             setMinistryList(ministryData);
             //console.log('ministryData: ', ministryData);
         }
-        const getPrefix = async ()=>{
+        const getPrefix = async () => {
             const prefix = await fetchPrefix();
             //console.log('prefix: ', prefix);
             setPrefixList(prefix);
         }
-        const getAnnivWord = async ()=>{
+        const getAnnivWord = async () => {
             const anniv = await fetchAnniv();
             setAnnivList(anniv);
 
@@ -55,69 +58,84 @@ function App() {
         getMinistryList();
         getPrefix();
         getAnnivWord();
-    },[]);
+    }, []);
 
-    useEffect(()=>{
-        const getDepartmentList = async ()=>{
+    useEffect(() => {
+        const getDepartmentList = async () => {
             const data = await fetchDepartment();
             setDepartmentList(data);
-            console.log('department: ', data);
+            //console.log('department: ', data);
         }
         getDepartmentList();
-    },[ministryId]);
+    }, [ministryId]);
+
+    useEffect(()=>{
+        const getGreetingList = async ()=>{
+            const data = await fetchGreetingList();
+            //console.log('greetingData: ', data,`\nlength: ${data.length}`);
+            setGreetingList(data);
+        }
+        getGreetingList();
+    },[getDataStatus])
 
 
-    const fetchCardList = async ()=>{
+    const fetchCardList = async () => {
         const res = await Axios.get("http://localhost:5000/card");
         //Axios.get("http://localhost:5000/wishList");
         const data = await res.data;
         return data;
     }
 
-    const fetchMinistry = async ()=>{
+    const fetchMinistry = async () => {
         const res = await Axios.get("http://localhost:5000/ministry");
         const data = await res.data;
         return data;
     }
 
-    const fetchDepartment = async()=>{
+    const fetchDepartment = async () => {
         const res = await Axios.get(`http://localhost:5000/department?gov_main_id=${ministryId}`);
         const data = await res.data;
         return data;
     }
 
-    const fetchPrefix = async()=>{
+    const fetchPrefix = async () => {
         const res = await Axios.get('http://localhost:5000/prefix_name');
         const data = await res.data;
         return data;
     }
 
-    const fetchAnniv = async()=>{
+    const fetchAnniv = async () => {
         const res = await Axios.get('http://localhost:5000/anniversary_word');
         const data = await res.data;
         return data;
     }
 
+    const fetchGreetingList = async ()=>{
+        const res = await Axios.get('http://localhost:5000/anniversary_main?_page=1');
+        const data = await res.data;
+        return data;
+    }
 
-    const onCardClick = async(cardId) => {
+
+    const onCardClick = async (cardId) => {
         //console.log('cardId:', cardId);
         await updateCardList(cardId);
         const cardPath = cardList.find((card) => card.card_id === cardId);
-        console.log("cardPath: ",cardPath);
+        //console.log("cardPath: ", cardPath);
         setCardSelected({
             card_id: cardPath.card_id,
             card_pic: cardPath.card_pic
         });
-        console.log('cardSelected: ', cardSelected);
+        //console.log('cardSelected: ', cardSelected);
         openModal();
     }
 
-    const updateCardList = async(cardId=null)=>{
+    const updateCardList = async (cardId = null) => {
         const updateCard = cardList.map(card => {
             if (card.card_id === cardId) {
-              return {...card, selected: true};
-            }else{
-                return {...card, selected: false};
+                return { ...card, selected: true };
+            } else {
+                return { ...card, selected: false };
             }
         });
         setCardList(updateCard);
@@ -127,77 +145,86 @@ function App() {
 
     const onMinistryChange = (e) => {
         const id = e.target.value;
-        if(id>0){
+        if (id > 0) {
             setMinistryId(id);
         }
     }
 
     const customStyles = {
         content: {
-          top: '50%',
-          left: '50%',
-          right: 'auto',
-          bottom: 'auto',
-          marginRight: '-50%',
-          transform: 'translate(-50%, -50%)',
-          backgroundColor: '#EFD9D1',
-          borderRadius: '15px',
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            backgroundColor: '#EFD9D1',
+            borderRadius: '15px',
+            transition: 'drop 0.5s ease forwards'
         },
     };
 
+    
+
     function openModal() {
         setIsOpen(true);
+        setTimeout(closeModal, 5000);
     }
-    
+
     function afterOpenModal() {
         // references are now sync'd and can be accessed.
         //subtitle.style.color = '#f00';
-        console.log('hello after open');
-        if(modalIsOpen===true){
-            setTimeout(closeModal, 5000);
-        }
-        
+        //console.log('hello after open');
+        // if (modalIsOpen === true) {
+        //     setTimeout(closeModal, 5000);
+        // }
+
 
 
 
     }
-    
+
     function closeModal() {
         setIsOpen(false);
+        clearTimeout();
     }
 
-    const onAddData = async (formData) =>{
-        console.log("onAddData1: ",formData);
+    const onAddData = async (formData) => {
+        //console.log("onAddData1: ", formData);
         await updateCardList();
         formData.createTimestamp = fnc.getTimeStamp();
         formData.card_id = cardSelected.card_id;
         //console.log('onAddData2: ', formData);
-        const res = await Axios.post('http://localhost:5000/anniversary_main',formData);
+        const res = await Axios.post('http://localhost:5000/anniversary_main', formData);
         const data = await res.data;
-        console.log('postData: \n', data);
+        //console.log('postData: \n', data);
         setCardSelected({
             card_id: null,
             card_pic: null
         });
     }
 
-    
+
     return (
         <div className="App">
-            <Header/>
-            <div className="main-container main-form d-flex gap-5 bd-highlight">
-                <CardSection cardList={cardList} onCardClick={onCardClick} />
-                <InputSection   ministryList={ministryList} 
-                                onMinistryChange={onMinistryChange}
-                                departmentList={departmentList}
-                                prefixList={prefixList}
-                                annivList={annivList}
-                                cardSelected={cardSelected}
-                                onAddData={onAddData}
-                />
-                
+            <Header />
+            <div className="main-container">
+                <div className="main-form d-flex gap-5 bd-hightlight">
+                    <CardSection cardList={cardList} onCardClick={onCardClick} />
+                    <InputSection ministryList={ministryList}
+                        onMinistryChange={onMinistryChange}
+                        departmentList={departmentList}
+                        prefixList={prefixList}
+                        annivList={annivList}
+                        cardSelected={cardSelected}
+                        onAddData={onAddData}
+                    />
+                </div>
+                <GreetingList greetingList={greetingList}
+                              cardList={cardList}                   
+                />    
             </div>
-            <GreetingList/>
+            
 
             <Modal
                 isOpen={modalIsOpen}

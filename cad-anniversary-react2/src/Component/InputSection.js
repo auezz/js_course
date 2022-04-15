@@ -3,11 +3,10 @@ import { useEffect, useState } from 'react';
 import './InputSection.css';
 import Cleave from 'cleave.js/react';
 import CleavePhone from 'cleave.js/dist/addons/cleave-phone.th';
-import MicroModal from 'react-micro-modal';
-
+import styled from 'styled-components';
+import { MdSave } from 'react-icons/md';
 
 export default function InputSection(props) {
-    
     const {ministryList, onMinistryChange, departmentList, prefixList, annivList, cardSelected, onAddData} = props;
     const wishTextRegEx = /&#[0-9]+;/g;
     const wishTextRegEx2 = / &#13;&#10; /g;
@@ -25,16 +24,19 @@ export default function InputSection(props) {
         annivText: ''
     };
     const [formData, setFormData] = useState(initialVal);
-    
-
     const elemList = Array.from(document.querySelectorAll('.add-form input, .add-form select, .add-form textarea'));
-    console.log('A elemList: ', elemList);
-    console.log('annivList: ', annivList);
-    console.log('cardSelected: ', cardSelected.card_id, typeof cardSelected.card_id, cardSelected);
+    const SaveIcon = styled(MdSave)`
+        width: 20px;
+        height: 20px;
+        vertical-align: text-top;
+    `;
+    // console.log('A elemList: ', elemList);
+    // console.log('annivList: ', annivList);
+    // console.log('cardSelected: ', cardSelected.card_id, typeof cardSelected.card_id, cardSelected);
 
 
     const onSelectchange = (e)=>{
-        console.log('onSelectChange: ', e);
+        //console.log('onSelectChange: ', e);
         if(e.target.id==="ministry"){
             const departmentElem = document.getElementById('department');
             departmentElem.value = 0;
@@ -43,12 +45,12 @@ export default function InputSection(props) {
 
     const onSubmitForm = (e)=>{
         e.preventDefault();
-        console.log('submit');
-        console.log('formData: ', formData);
+        //console.log('submit');
+        //console.log('formData: ', formData);
         let check = true;
         elemList.forEach((elem)=>{
             let elemClassList = Array.from(elem.classList);
-            console.log(elemClassList);
+            //console.log(elemClassList);
             if(elemClassList.includes('is-required')===true){
                 if(elem.type==="select-one" && elem.value==="0"){
                     elem.classList.add('is-invalid');
@@ -64,7 +66,7 @@ export default function InputSection(props) {
             }else{
                 if(elem.id==="phone" && elem.value!==""){
                     let getVal = elem.value.split(" ").join('');
-                    console.log('getValPhone: ', getVal, getVal.length);
+                    //console.log('getValPhone: ', getVal, getVal.length);
                     if(getVal.length!==10){
                         elem.classList.add('is-invalid');
                         check = false;
@@ -78,7 +80,7 @@ export default function InputSection(props) {
                     }
                 }else if(elem.id==="email" && elem.value!==""){
                     if(elem.value.match(emailValidRegex)){
-                        console.log('email: ',true);
+                        //console.log('email: ',true);
                     }else{
                         elem.classList.add('is-invalid');
                         check = false;
@@ -87,18 +89,18 @@ export default function InputSection(props) {
             }
         });
         
-        console.log('checkState: ', check);
+        //console.log('checkState: ', check);
         if(check===true){
             onAddData(formData);
             //console.log('initailVal: ', initialVal);
-            console.log('formData: ', formData);
+            //console.log('formData: ', formData);
             setFormData(initialVal);
             
         }
     }
 
     const onInputChange = (e)=>{
-        console.log('onInputChangeL ', e.target.id, e.target.value);
+        //console.log('onInputChangeL ', e.target.id, e.target.value);
         const { name, value } = e.target;
         const annivTextElem = document.getElementById('annivText');
         
@@ -134,7 +136,7 @@ export default function InputSection(props) {
                 [name]: value
             }
         });
-        console.log(e.target.value);
+        //console.log(e.target.value);
         
     }
 
@@ -327,14 +329,9 @@ export default function InputSection(props) {
                         <button className='btn btn-success px-4'
                                 type='submit'    
                         > 
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-send" viewBox="0 0 16 16">
-                                <path d="M15.854.146a.5.5 0 0 1 .11.54l-5.819 14.547a.75.75 0 0 1-1.329.124l-3.178-4.995L.643 7.184a.75.75 0 0 1 .124-1.33L15.314.037a.5.5 0 0 1 .54.11ZM6.636 10.07l2.761 4.338L14.13 2.576 6.636 10.07Zm6.787-8.201L1.591 6.602l4.339 2.76 7.494-7.493Z"/>
-                            </svg>&ensp;บันทึก
+                            <SaveIcon />&ensp;บันทึก
                         </button>            
                     </div>
-                    <MicroModal trigger={(open) => <div onClick={open}>Open!</div>}>
-                        {(close) => <button onClick={close}>Close!</button>}
-                    </MicroModal>
                 </form>    
             </div>
         </div>

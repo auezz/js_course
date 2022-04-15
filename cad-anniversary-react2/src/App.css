@@ -20,6 +20,12 @@ img.modal-pic {
     border-radius: 15px;
 }
 
+@media only screen and (max-width: 1400px) {
+    .card-select-section .card-body .card-container {
+        width: 19vh !important;
+    }
+}
+
 @media only screen and (max-width: 900px) {
     .main-form {
         display: block !important;
@@ -57,4 +63,19 @@ img.modal-pic {
     .card-select-section .card-body img {
         border-radius: 15px !important;
     }
+}
+
+@keyframes drop{
+    0%{
+        opacity: 0;
+    }
+    70%{
+        transform: translateY(700px);
+    }
+    100%{
+        transform: translateY(650px);
+        opacity: 1;
+    }
+
+
 }
