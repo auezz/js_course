@@ -221,7 +221,8 @@ function App() {
                     />
                 </div>
                 <GreetingList greetingList={greetingList}
-                              cardList={cardList}                   
+                              cardList={cardList}
+                              prefixList={prefixList}                   
                 />    
             </div>
             

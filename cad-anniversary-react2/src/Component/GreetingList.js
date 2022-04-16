@@ -3,23 +3,29 @@ import './GreetingList.css';
 const fnc = require('../ClassFunction');
 
 export default function GreetingList(props) {
-    const { greetingList, cardList } = props;
+    const { greetingList, cardList, prefixList } = props;
     console.log('greetingList: ', greetingList);
     console.log('cardList: ', cardList);
+    console.log('prefix: ', prefixList);
+    
     //const getCard = cardList.find((card)=> card.card_id==="72");
+    console.log('dateTh: ', fnc.dateTh(""));
     
 
     const cardPath = (getCardId=null)=>{
-        // const card = (cardId===null || cardId==='')?69:cardId;
-        // const getCard = cardList.find((card)=>card.card_id===card);
-        // console.log(getCard, cardId);
-        // return getCard.card_pic;
         const setCard = (getCardId===null || getCardId==='')?'69':getCardId;
         const card = cardList.find((item)=>item.card_id===setCard);
-        console.log('card: ', card, '\ngetCardId: ', getCardId, typeof getCardId);
+        //console.log('card: ', card, '\ngetCardId: ', getCardId, typeof getCardId);
         return card.card_pic;
-
     }
+
+    const getName = (prefixId, fname, lname)=>{
+        const title = prefixList.find((prefix)=>prefix.id===prefixId);
+        const name = `${title.prefix_name_short}${fname} ${lname}`;
+        return name;
+    }
+
+
 
     //console.log('getCard: ', cardPath('72'));    
 
@@ -37,7 +43,13 @@ export default function GreetingList(props) {
                                     <img src={`/images/cad-card-pic/${cardPath(list.card_id)}`} alt="" />
                                 </div>
                                 <div className="card-content">
-                                    
+                                    <h3 className='anniv-text'>{list.annivText}</h3>      
+                                    <p className="greeting-name">
+                                        <span className='fw-bold'>โดย&ensp;</span>
+                                        <span>{getName(list.prefix, list.firstName, list.lastName)}</span>
+                                    </p>
+                                    <p className='office-name'></p>
+                                    <p className="post-date text-center">{fnc.dateTh(list.createTimestamp)}</p>
                                 </div>
                             </div>
                         ))
