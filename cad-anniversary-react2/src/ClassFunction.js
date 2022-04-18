@@ -18,7 +18,7 @@ module.exports.numberWCommas = (number)=>{
 }
 
 module.exports.dateTh = (dateTimestamp)=>{
-    console.log(dateTimestamp);
+    //console.log(dateTimestamp);
 
     const monthTh = (month)=>{
         const monthInt = parseInt(month);
@@ -69,11 +69,11 @@ module.exports.dateTh = (dateTimestamp)=>{
     }
 
     const checkDate = (date)=>{
-        console.log('checkDate', date);
+        //console.log('checkDate', date);
         const dateParse = Date.parse(date[0]);
         let dateTh = "";
         if(!isNaN(dateParse)){
-            console.log('in');
+           // console.log('in');
             const splitDate = date[0].split("-");
             const day = parseInt(splitDate[2]);
             const month = monthTh(splitDate[1]);
@@ -83,7 +83,7 @@ module.exports.dateTh = (dateTimestamp)=>{
         return dateTh;
     }
     const date = checkDate(dateTimestamp.split(" "));
-    console.log('hello');
+    //console.log('hello');
     return date;
 
     

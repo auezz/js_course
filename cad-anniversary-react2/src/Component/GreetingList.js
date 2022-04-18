@@ -4,12 +4,12 @@ const fnc = require('../ClassFunction');
 
 export default function GreetingList(props) {
     const { greetingList, cardList, prefixList } = props;
-    console.log('greetingList: ', greetingList);
-    console.log('cardList: ', cardList);
-    console.log('prefix: ', prefixList);
+    // console.log('greetingList: ', greetingList);
+    // console.log('cardList: ', cardList);
+    // console.log('prefix: ', prefixList);
     
     //const getCard = cardList.find((card)=> card.card_id==="72");
-    console.log('dateTh: ', fnc.dateTh(""));
+    //console.log('dateTh: ', fnc.dateTh(""));
     
 
     const cardPath = (getCardId=null)=>{

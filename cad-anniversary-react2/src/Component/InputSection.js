@@ -11,6 +11,7 @@ export default function InputSection(props) {
     const wishTextRegEx = /&#[0-9]+;/g;
     const wishTextRegEx2 = / &#13;&#10; /g;
     const emailValidRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
+    const [ministryId, setMinistryId] = useState(null);
     const initialVal = {
         ministry: 0,
         department: 0,
@@ -21,7 +22,8 @@ export default function InputSection(props) {
         phone: '',
         email: '',
         annivId: 0,
-        annivText: ''
+        annivText: '',
+        organizationName: ''
     };
     const [formData, setFormData] = useState(initialVal);
     const elemList = Array.from(document.querySelectorAll('.add-form input, .add-form select, .add-form textarea'));
@@ -30,6 +32,7 @@ export default function InputSection(props) {
         height: 20px;
         vertical-align: text-top;
     `;
+    console.log('ministryId: ', ministryId, typeof ministryId);
     // console.log('A elemList: ', elemList);
     // console.log('annivList: ', annivList);
     // console.log('cardSelected: ', cardSelected.card_id, typeof cardSelected.card_id, cardSelected);
@@ -92,21 +95,26 @@ export default function InputSection(props) {
         //console.log('checkState: ', check);
         if(check===true){
             onAddData(formData);
-            //console.log('initailVal: ', initialVal);
-            //console.log('formData: ', formData);
             setFormData(initialVal);
-            
         }
     }
 
     const onInputChange = (e)=>{
-        //console.log('onInputChangeL ', e.target.id, e.target.value);
+        //console.log('onInputChangeL ', e.target.id, e.target.value, ministryId);
         const { name, value } = e.target;
         const annivTextElem = document.getElementById('annivText');
         
-        if(e.target.id==="ministry"){
+        if(e.target.id==="ministry" && ministryId!=="23" && ministryId!=="25"){
             const departmentElem = document.getElementById('department');
             departmentElem.value = 0;
+        }else if(e.target.id==="ministry" && ministryId==="23" && ministryId==="25"){
+            console.log('else');
+            setFormData((prevFromData)=>{
+                return {
+                    ...prevFromData,
+                    department: null
+                }
+            });
         }
 
         if(e.target.value!=="" || e.target.value!=="0"){
@@ -167,9 +175,8 @@ export default function InputSection(props) {
                                     onChange={(e)=>{
                                         onMinistryChange(e);
                                         onInputChange(e);
-
+                                        setMinistryId(e.target.value);
                                     }}
-                                    
                             >
                                 <option value={0} defaultValue>-- กรุณาเลือก --</option>
                                 {
@@ -183,26 +190,35 @@ export default function InputSection(props) {
                                 กรุณาเลือกประเภท/สังกัด
                             </div>
                         </div>
-                        <div className="w-50">
-                            <label htmlFor="department" className='form-label mb-1'>ชื่อหน่วยงาน</label>        
-                            <select name="department" 
-                                    id="department"
-                                    className='form-select is-required'
-                                    onChange={(e)=>{
-                                        onInputChange(e);    
-                                    }}
-                                    value={formData.department} >
-                                <option value={0} defaultValue>-- กรุณาเลือก --</option>
-                                {
-                                    departmentList.map((data, index)=>(
-                                        <option key={index} value={data.gov_id}>{data.gov_name}</option>
-
-                                    ))        
-
-                                }        
-                            </select>
+                        <div className={`w-50 ${ministryId===null || ministryId==="0"?'d-none':''}`}>
+                            <label htmlFor="department" className='form-label mb-1'>ชื่อหน่วยงาน</label>
+                            {
+                                ministryId!=="23" && ministryId!=="25" ? 
+                                    <select name="department" 
+                                            id="department"
+                                            className='form-select is-required'
+                                            onChange={(e)=>{
+                                                onInputChange(e);
+                                            }}
+                                            value={formData.department} >
+                                        <option value={0} defaultValue>-- กรุณาเลือก --</option>
+                                            {
+                                                departmentList.map((data, index)=>(
+                                                    <option key={index} value={data.gov_id}>{data.gov_name}</option>
+                                                ))        
+                                            }        
+                                    </select>
+                                :
+                                <input type="text" className="form-control is-required"
+                                       name="organizationName" id='organizationName'
+                                       onChange={(e)=>{
+                                           onInputChange(e);
+                                       }}
+                                       value={formData.organizationName}      
+                                />
+                            }        
                             <div className="invalid-feedback">
-                                กรุณาเลือกหน่วยงาน
+                                {ministryId!=="23" && ministryId!=="25" ?`กรุณาเลือกหน่วยงาน`:`กรุณากรอกหน่วยงาน`}
                             </div>    
                         </div>
                     </div>
