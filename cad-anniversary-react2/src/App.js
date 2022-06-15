@@ -26,6 +26,8 @@ function App() {
     const [modalTimer, setModalTimer] = useState();
     const [getDataStatus, setGetDataStatus] = useState(false);
     const [greetingList, setGreetingList] = useState([]);
+    const [greetingNum, setGreetingNum] = useState(0);
+    const [pageSelect, setPageSelect] = useState(1);
 
 
     useEffect(() => {
@@ -76,7 +78,7 @@ function App() {
             setGreetingList(data);
         }
         getGreetingList();
-    },[getDataStatus])
+    },[getDataStatus, pageSelect])
 
 
     const fetchCardList = async () => {
@@ -111,8 +113,11 @@ function App() {
     }
 
     const fetchGreetingList = async ()=>{
-        const res = await Axios.get('http://localhost:5000/anniversary_main?_page=1');
+        const res = await Axios.get(`http://localhost:5000/anniversary_main?_page=${pageSelect}`);
         const data = await res.data;
+        //res.headers["x-total-count"]
+        setGreetingNum(res.headers["x-total-count"]);
+        console.log('AllList: ', greetingNum);
         return data;
     }
 
@@ -204,6 +209,15 @@ function App() {
         });
     }
 
+    const onPageChange = (page)=>{
+        if(page===null){
+            return;
+        }
+        setPageSelect(page);
+    }
+
+   
+
 
     return (
         <div className="App">
@@ -222,8 +236,12 @@ function App() {
                 </div>
                 <GreetingList greetingList={greetingList}
                               cardList={cardList}
-                              prefixList={prefixList}                   
-                />    
+                              prefixList={prefixList}  
+                              greetingNum={greetingNum}  
+                              pageSelect={pageSelect}   
+                              onPageChange={onPageChange}            
+                />
+                   
             </div>
             
 
