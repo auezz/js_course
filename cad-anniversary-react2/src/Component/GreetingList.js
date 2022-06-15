@@ -3,13 +3,13 @@ import './GreetingList.css';
 const fnc = require('../ClassFunction');
 
 export default function GreetingList(props) {
-    const { greetingList, cardList, prefixList } = props;
-    // console.log('greetingList: ', greetingList);
-    // console.log('cardList: ', cardList);
-    // console.log('prefix: ', prefixList);
+    const { greetingList, cardList, prefixList, greetingNum, pageSelect,onPageChange } = props;
+    console.log('greetingList: ', greetingList);
+    console.log('cardList: ', cardList);
+    console.log('prefix: ', prefixList);
     
     //const getCard = cardList.find((card)=> card.card_id==="72");
-    //console.log('dateTh: ', fnc.dateTh(""));
+    console.log('dateTh: ', fnc.dateTh(""));
     
 
     const cardPath = (getCardId=null)=>{
@@ -25,6 +25,32 @@ export default function GreetingList(props) {
         return name;
     }
 
+    const Pagination = () => {
+        const pageAmount = Math.round(greetingNum / 9);
+        console.log('pageAmount: ', pageAmount);
+        return (
+            <nav aria-label="Page navigation example">
+                 <ul className='pagination'>
+                    <li className='page-item'>
+                        <a className={`page-link pagePrev ${pageSelect > 1 ? "" : "page-disabled"}`}
+                            onClick={() => {
+                                onPageChange(pageSelect > 1 ? pageSelect - 1 : null);
+                            }}
+                        >Previous</a>
+                    </li>
+                    <li className='page-item'><a className='page-link'>{pageSelect}</a></li>
+                    <li className='page-item'>
+                        <a className={`page-link pageNext ${pageSelect !== pageAmount ? "" : "page-disabled"}`} 
+                            onClick={() => {
+                                onPageChange(pageSelect !== pageAmount ? pageSelect + 1 : null);
+                            }}
+                        >Next
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        )
+    }
 
 
     //console.log('getCard: ', cardPath('72'));    
@@ -32,7 +58,7 @@ export default function GreetingList(props) {
     return (
         <div className='mt-5'>
             <h4 className="text-center fw-bold">รายนามผู้ร่วมอวยพร
-                <span className='fw-normal'>&ensp;({fnc.numberWCommas(greetingList.length)})</span>
+                <span className='fw-normal'>&ensp;({fnc.numberWCommas(greetingNum)})</span>
             </h4>
             <div className="card-list-container">
                 {
@@ -58,7 +84,12 @@ export default function GreetingList(props) {
                     :null
                 }
                 
+                
             </div>
+            <div className='text-right'>
+                <Pagination/>
+            </div>
+            
         </div>
     )
 }
